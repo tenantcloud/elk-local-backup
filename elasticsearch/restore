@@ -1,0 +1,11 @@
+#!/bin/bash
+
+JSON=$(cat <<EOL
+{
+    "indices": "$1",
+    "ignore_unavailable": "true",
+    "include_global_state": false
+}
+EOL
+)
+curl -H 'Content-Type: application/json' -X POST "http://${DOMAIN}/_snapshot/${REPO}/${1}-snapshot/_restore" -d "$JSON"

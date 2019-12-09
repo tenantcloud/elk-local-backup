@@ -1,0 +1,17 @@
+#!/bin/bash
+
+JSON=$(cat <<EOL
+            {
+            "type": "s3",
+            "settings": {
+            "access_key": "$ES_USR",
+            "secret_key": "$ES_PASSWD",
+            "bucket": "$REPO",
+            "region": "$REGION",
+            "base_path": "elasticsearch",
+            "max_retries": 3
+            }
+            }
+EOL
+)
+curl -H 'Content-Type: application/json' -XPUT "http://${DOMAIN}/_snapshot/${REPO}/" -d "$JSON"

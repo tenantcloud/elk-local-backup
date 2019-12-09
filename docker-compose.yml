@@ -1,0 +1,33 @@
+version: '3.2'
+services:
+   elasticsearch:
+     build:
+        context: elasticsearch/
+        args:
+          ES_VERSION: ${ES_VERSION}
+     environment:
+      - discovery.type=single-node
+      - ES_USR=${AWS_PUBLIC_KEY}
+      - ES_PASSWD=${AWS_SECRET_KEY}
+      - REPO=${BUCKET}
+      - REGION=${REGION}
+      - DOMAIN=${DOMAIN}
+     networks:
+       - elk
+     ports:
+       - "${ES_PORT}:9200"
+
+   kibana:
+     image: docker.elastic.co/kibana/kibana:${KB_VERSION}
+     environment:
+       SERVER_NAME: localhost
+       ELASTICSEARCH_URL: http://elasticsearch:9200/
+     ports:
+       - "${KB_PORT}:5601"
+     networks:
+       - elk
+     depends_on:
+       - elasticsearch
+
+networks:
+  elk:
